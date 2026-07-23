@@ -80,6 +80,20 @@ html[data-theme="light"] .snb-dropdown-trigger:hover {
   border-left-color: var(--text-muted);
 }
 
+.snb-submenu-label {
+  display: block;
+  box-sizing: border-box;
+  padding: 0.45rem 1.25rem 0.35rem 2rem;
+  color: var(--text);
+  font-size: 0.9rem;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.snb-submenu > a {
+  font-size: 0.85rem;
+}
+
 html[data-theme="light"] .snb-dropdown-menu a:hover,
 html[data-theme="light"] .snb-dropdown-menu a.active {
   background: var(--hover-bg, rgba(0, 0, 0, 0.04));

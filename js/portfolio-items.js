@@ -14,6 +14,14 @@ window.PORTFOLIO_ITEMS = {
       option: "팬 캐릭터 제작 예시"
     }
   ],
+  prop: [
+    {
+      youtubeId: "_dapV9Iy1kQ",
+      vtuber: "예시 소품",
+      art: "Rabbi",
+      option: "소품 제작 예시"
+    }
+  ],
   api: [
     {
       youtubeId: "_dapV9Iy1kQ",

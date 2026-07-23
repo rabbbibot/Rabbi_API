@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="theme-color" content="#ffffff">
+  <style>
+    @font-face {
+      font-family: 'Pretendard';
+      font-weight: 45 920;
+      font-style: normal;
+      font-display: block;
+      src: url('fonts/PretendardVariable.woff2') format('woff2-variations');
+    }
+    html, body { background: #fff; font-family: 'Pretendard', sans-serif; }
+    .main { background: #fff; min-height: 100vh; }
+  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="icon.webp" type="image/webp">
+  <link rel="preload" href="fonts/PretendardVariable.woff2" as="font" type="font/woff2" crossorigin>
+  <title>Rabbi API · 주문서 작성</title>
+  <link rel="stylesheet" href="css/mummu-layout.css">
+  <link rel="stylesheet" href="css/commission-menu.css">
+  <link rel="stylesheet" href="css/page-motion.css">
+</head>
+<body>
+  <div class="layout">
+    <aside class="snb" data-page="order"></aside>
+    <main class="main">
+      <header class="page-header">
+        <h1 class="page-title">주문서 작성</h1>
+        <p class="page-desc">항목을 선택한 뒤 <a class="page-desc-link" href="index.html">Discord (@im_rabbi)</a> 또는 <a class="page-desc-link" href="https://x.com/laebi545779" target="_blank" rel="noopener noreferrer">트위터 DM</a>으로 보내주세요.</p>
+      </header>
+      <section class="content-block wide order-page">
+        <form class="order-form" id="order-form" novalidate></form>
+        <div class="order-summary">
+          <h2 class="order-summary-title">예상 견적</h2>
+          <p class="order-summary-price" id="order-estimate">0원~</p>
+          <p class="order-summary-note">API 복잡도에 따라 최종 금액이 달라질 수 있습니다.</p>
+        </div>
+        <div class="order-output">
+          <h2 class="order-summary-title">주문 내용</h2>
+          <textarea class="order-preview" id="order-preview" rows="12" readonly></textarea>
+          <button type="button" class="order-copy-btn" id="order-copy">클립보드에 복사</button>
+        </div>
+      </section>
+    </main>
+  </div>
+  <script src="js/site-config.js"></script>
+  <script src="js/site-nav.js"></script>
+  <script src="js/price-items.js"></script>
+  <script src="js/order-items.js"></script>
+  <script src="js/order-form.js"></script>
+  <script src="js/commission-menu.js"></script>
+  <script src="js/page-motion.js"></script>
+</body>
+</html>

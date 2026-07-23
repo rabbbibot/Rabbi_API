@@ -1,48 +1,65 @@
 window.TIP_ITEMS = {
   "warudo-basic": [
     {
-      title: "Warudo 설치",
+      title: "블루프린트란?",
       html: `
-        <ol>
-          <li><a href="https://store.steampowered.com/app/2073550/Warudo/" target="_blank" rel="noopener noreferrer">Steam에서 Warudo 설치</a></li>
-          <li>Warudo 실행 후 라이선스 활성화</li>
-          <li>모델 불러오기 및 기본 트래킹 설정</li>
-        </ol>
+        <p>블루프린트는 Warudo에서 <strong>「어떤 일이 일어나면, 무엇을 할지」</strong>를 정하는 연출 설정입니다.</p>
+        <p>예를 들어 키를 누르면 표정이 바뀌거나, API 호출 시 소품이 날아오는 동작 등을 블루프린트로 만들 수 있습니다. 제가 전달드린 설정 파일도 블루프린트 형태로 불러와 사용합니다.</p>
       `
     },
     {
-      title: "기본 프로젝트 구성",
-      text: "씬, 아바타, 카메라 등 기본 요소를 구성하는 방법입니다. 설명을 추가해주세요.",
-      youtubeId: "_dapV9Iy1kQ"
+      title: "블루프린트 불러오기 (파일)",
+      html: `
+        <ol>
+          <li>Warudo 에디터를 실행합니다.</li>
+          <li>왼쪽 탭에서 <strong>블루프린트(σ 아이콘)</strong> 탭을 엽니다.</li>
+          <li>상단 도구 모음에서 <strong>Import Blueprint From File</strong> 버튼을 클릭합니다.</li>
+          <li>전달받은 <strong>.json</strong> 블루프린트 파일을 선택합니다.</li>
+          <li>목록에 블루프린트 이름이 추가되면 불러오기가 완료된 것입니다.</li>
+        </ol>
+        <p class="notice-inline-note">같은 방법으로 여러 블루프린트 파일을 계속 추가할 수 있습니다.</p>
+      `
     },
     {
-      title: "모델 임포트",
-      text: "Live2D / VRM 모델을 Warudo에 불러오는 방법입니다.",
-      youtubeId: "_dapV9Iy1kQ"
+      title: "블루프린트 불러오기 (클립보드)",
+      html: `
+        <ol>
+          <li>블루프린트 코드(JSON)를 복사합니다.</li>
+          <li>블루프린트 탭 상단에서 <strong>Import Blueprint From Clipboard</strong>를 클릭합니다.</li>
+          <li>클립보드 내용이 블루프린트로 등록됩니다.</li>
+        </ol>
+        <p class="notice-inline-note">Discord 등으로 코드만 받은 경우 이 방법을 사용하면 됩니다.</p>
+      `
+    },
+    {
+      title: "블루프린트 적용하기",
+      html: `
+        <ol>
+          <li>블루프린트 목록에서 불러온 항목을 클릭해 선택합니다.</li>
+          <li>이름 옆 <strong>눈(eye) 아이콘</strong>이 켜져 있는지 확인합니다. 눈에 빗금이 그어져 있으면 비활성 상태이므로 클릭해 켜주세요.</li>
+          <li>노드 에디터에서 단축키, API 조건, 연결된 소품 등 설정값을 확인·수정합니다.</li>
+          <li>씬으로 돌아가 단축키나 API 동작을 테스트해 정상 작동하는지 확인합니다.</li>
+        </ol>
+        <p>블루프린트는 씬마다 따로 저장됩니다. 다른 씬에서도 쓰려면 같은 파일을 다시 불러오거나, <strong>Export Blueprint To File</strong>로 내보낸 뒤 복사해 사용하세요.</p>
+      `
     }
   ],
   "warudo-api": [
     {
-      title: "API 활성화",
+      title: "SOOP · 치지직 API 연동",
       html: `
-        <ol>
-          <li>Warudo 설정 열기</li>
-          <li>API / Remote 섹션으로 이동</li>
-          <li>API 서버 활성화</li>
-          <li>포트 번호 및 인증 토큰 확인</li>
-        </ol>
-        <p>기본 API 문서: <a href="https://docs.warudo.app/" target="_blank" rel="noopener noreferrer">Warudo Docs</a></p>
+        <p>사용하는 플랫폼 플러그인을 구독해 주세요.</p>
+        <div class="tip-platform-grid">
+          <section class="tip-platform-card tip-platform-card--soop">
+            <h4 class="tip-platform-title">SOOP(숲)</h4>
+            <a class="tip-platform-link" href="https://steamcommunity.com/workshop/browse/?appid=2079120&searchtext=SOOP" target="_blank" rel="noopener noreferrer">창작마당</a>
+          </section>
+          <section class="tip-platform-card tip-platform-card--chzzk">
+            <h4 class="tip-platform-title">치지직</h4>
+            <a class="tip-platform-link" href="https://steamcommunity.com/workshop/browse/?appid=2079120&searchtext=Chzzk" target="_blank" rel="noopener noreferrer">창작마당</a>
+          </section>
+        </div>
       `
-    },
-    {
-      title: "HTTP API 호출",
-      text: "REST API를 통해 아바타 파라미터, 표정, 씬 전환 등을 제어하는 예시입니다.",
-      youtubeId: "_dapV9Iy1kQ"
-    },
-    {
-      title: "WebSocket 연동",
-      text: "실시간 이벤트 수신 및 양방향 통신 설정 방법입니다.",
-      youtubeId: "_dapV9Iy1kQ"
     }
   ],
   "warudo-obs": [
