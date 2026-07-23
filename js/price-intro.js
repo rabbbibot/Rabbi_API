@@ -11,13 +11,19 @@
       '<p class="price-intro-price">' + intro.price + "</p>";
   }
 
-  function initFootnote() {
-    var foot = document.querySelector(".price-footnote");
-    if (foot && window.PRICE_NOTE) {
-      foot.textContent = PRICE_NOTE;
-    }
+  function initPricePageTitle() {
+    var intro = document.querySelector(".price-intro[data-category]");
+    if (!intro || !window.PRICE_PAGE) return;
+
+    var meta = PRICE_PAGE[intro.dataset.category];
+    if (!meta) return;
+
+    if (meta.docTitle) document.title = meta.docTitle;
+
+    var heading = document.querySelector(".page-header .page-title");
+    if (heading && meta.title) heading.textContent = meta.title;
   }
 
   document.querySelectorAll(".price-intro[data-category]").forEach(renderIntro);
-  initFootnote();
+  initPricePageTitle();
 })();

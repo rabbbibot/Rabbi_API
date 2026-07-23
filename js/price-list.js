@@ -23,22 +23,64 @@ function createPriceMedia(item) {
   }
 
   return (
-    '<div class="price-card-media price-card-media--gallery">' +
-      images.map(function (src, index) {
-        return (
-          '<div class="price-card-media-item">' +
-            '<img src="' + src + '" alt="' + (item.title || "") + " " + (index + 1) + '" loading="lazy" decoding="async">' +
-          "</div>"
-        );
-      }).join("") +
+    '<div class="price-card-media">' +
+      '<div class="price-card-slider" tabindex="0">' +
+        '<button type="button" class="price-card-slider-btn price-card-slider-prev" aria-label="이전 이미지">' +
+          '<span aria-hidden="true">‹</span>' +
+        "</button>" +
+        '<div class="price-card-slider-viewport">' +
+          '<div class="price-card-slider-track">' +
+            images
+              .map(function (src, index) {
+                return (
+                  '<figure class="price-card-slider-slide">' +
+                    '<img src="' +
+                    src +
+                    '" alt="' +
+                    (item.title || "") +
+                    " " +
+                    (index + 1) +
+                    '" loading="lazy" decoding="async">' +
+                  "</figure>"
+                );
+              })
+              .join("") +
+          "</div>" +
+        "</div>" +
+        '<button type="button" class="price-card-slider-btn price-card-slider-next" aria-label="다음 이미지">' +
+          '<span aria-hidden="true">›</span>' +
+        "</button>" +
+        '<div class="price-card-slider-dots">' +
+          images
+            .map(function (_, index) {
+              return (
+                '<button type="button" class="price-card-slider-dot' +
+                (index === 0 ? " active" : "") +
+                '" data-index="' +
+                index +
+                '" aria-label="' +
+                (index + 1) +
+                '번째 이미지"></button>'
+              );
+            })
+            .join("") +
+        "</div>" +
+      "</div>" +
     "</div>"
   );
 }
 
+function ensureOptionO(text) {
+  var value = String(text || "").trim();
+  if (!value || value.endsWith(" O")) return value;
+  if (/\+/.test(value)) return value;
+  return value + " O";
+}
+
 function formatOptionLabel(option) {
-  if (typeof option === "string") return option;
+  if (typeof option === "string") return ensureOptionO(option);
   if (!option || !option.label) return "";
-  return option.label + (option.price ? " " + option.price : "");
+  return ensureOptionO(option.label + (option.price ? " " + option.price : ""));
 }
 
 function createPriceOptions(item) {
@@ -46,10 +88,12 @@ function createPriceOptions(item) {
   if (!options || !options.length) return "";
 
   return (
-    '<div class="price-card-tags" aria-label="변경 가능 옵션">' +
-      options.map(function (option) {
-        return '<span class="price-card-tag">' + formatOptionLabel(option) + "</span>";
-      }).join("") +
+    '<div class="price-card-tags" aria-label="변경 O 옵션">' +
+      options
+        .map(function (option) {
+          return '<span class="price-card-tag">' + formatOptionLabel(option) + "</span>";
+        })
+        .join("") +
     "</div>"
   );
 }
@@ -60,8 +104,12 @@ function createPriceCard(item) {
       createPriceMedia(item) +
       '<div class="price-card-body">' +
         '<div class="price-card-head">' +
-          '<h3 class="price-card-title">' + (item.title || "") + "</h3>" +
-          '<span class="price-card-price">' + (item.price || "문의") + "</span>" +
+          '<h3 class="price-card-title">' +
+          (item.title || "") +
+          "</h3>" +
+          '<span class="price-card-price">' +
+          (item.price || "문의") +
+          "</span>" +
         "</div>" +
         (item.desc ? '<p class="price-card-desc">' + item.desc + "</p>" : "") +
         createPriceOptions(item) +
@@ -70,12 +118,57 @@ function createPriceCard(item) {
   );
 }
 
+function initPriceCardSlider(root) {
+  var track = root.querySelector(".price-card-slider-track");
+  var dots = root.querySelectorAll(".price-card-slider-dot");
+  var prevBtn = root.querySelector(".price-card-slider-prev");
+  var nextBtn = root.querySelector(".price-card-slider-next");
+  var slideCount = track ? track.children.length : 0;
+  var current = 0;
+
+  if (!track || slideCount < 2) {
+    if (prevBtn) prevBtn.hidden = true;
+    if (nextBtn) nextBtn.hidden = true;
+    var dotWrap = root.querySelector(".price-card-slider-dots");
+    if (dotWrap) dotWrap.hidden = true;
+    return;
+  }
+
+  function goTo(index) {
+    current = (index + slideCount) % slideCount;
+    track.style.transform = "translateX(-" + current * 100 + "%)";
+    dots.forEach(function (dot, i) {
+      dot.classList.toggle("active", i === current);
+    });
+  }
+
+  prevBtn.addEventListener("click", function () {
+    goTo(current - 1);
+  });
+
+  nextBtn.addEventListener("click", function () {
+    goTo(current + 1);
+  });
+
+  dots.forEach(function (dot) {
+    dot.addEventListener("click", function () {
+      goTo(Number(dot.dataset.index));
+    });
+  });
+
+  root.addEventListener("keydown", function (event) {
+    if (event.key === "ArrowLeft") goTo(current - 1);
+    if (event.key === "ArrowRight") goTo(current + 1);
+  });
+}
+
 function initPriceList() {
   var grid = document.querySelector(".price-grid");
   if (!grid || !window.PRICE_ITEMS) return;
 
   var items = PRICE_ITEMS[grid.dataset.category] ?? [];
   grid.innerHTML = items.map(createPriceCard).join("");
+  grid.querySelectorAll(".price-card-slider").forEach(initPriceCardSlider);
 }
 
 initPriceList();

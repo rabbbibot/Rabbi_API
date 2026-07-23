@@ -3,25 +3,32 @@
  */
 window.PRICE_INTRO = {
   fan: {
-    lead: "와루도에서 사용할 수 있는 기본 팬 캐릭터를 제작해 드립니다.",
+    lead: "Warudo에서 사용할 수 있는 기본 팬 캐릭터를 제작해 드립니다.",
     note: "캐릭터의 복잡도에 따라 금액이 달라질 수 있습니다.",
     price: "50,000~"
   },
   prop: {
-    lead: "와루도에서 사용할 수 있는 기본 소품을 제작해 드립니다.",
+    lead: "Warudo에서 사용할 수 있는 기본 소품을 제작해 드립니다.",
     note: "소품의 복잡도에 따라 금액이 달라질 수 있습니다.",
     price: "30,000~"
   },
   "api-basic": {
-    lead: "와루도에서 사용할 수 있는 기본 API를 제작해 드립니다.",
+    lead: "Warudo에서 사용할 수 있는 기본 API를 제작해 드립니다.",
     note: "아래 금액은 기본 API 고정 가격입니다.",
     price: "10,000"
   },
   "api-custom": {
-    lead: "와루도에서 사용할 수 있는 커스텀 API를 제작해 드립니다.",
+    lead: "Warudo에서 사용할 수 있는 커스텀 API를 제작해 드립니다.",
     note: "요청하신 연출에 따라 금액이 달라질 수 있습니다.",
     price: "50,000~"
   }
+};
+
+window.PRICE_PAGE = {
+  fan: { title: "팬 캐릭터", docTitle: "Rabbi API · 팬 캐릭터" },
+  prop: { title: "소품", docTitle: "Rabbi API · 소품" },
+  "api-basic": { title: "기본 API", docTitle: "Rabbi API · 기본 API" },
+  "api-custom": { title: "커스텀 API", docTitle: "Rabbi API · 커스텀 API" }
 };
 
 /**
@@ -68,7 +75,7 @@ window.PRICE_ITEMS = {
         "images/price/api-throw-water.png",
         "images/price/api-throw-fly.png"
       ],
-      options: ["표정 변경 가능", "파티클 제거 / 변경 가능", "PROP 변경 가능", "상호작용 속도 변경 가능"]
+      options: ["표정 변경 O", "파티클 제거 / 변경 O", "PROP 변경 O", "상호작용 속도 변경 O"]
     },
     {
       title: "자동 잠자기",
@@ -76,7 +83,7 @@ window.PRICE_ITEMS = {
       price: "20,000",
       image: "images/price/api-auto-sleep.png",
       options: [
-        "파티클 제거 / 변경 가능"
+        "파티클 제거 / 변경 O"
       ]
     },
     {
@@ -84,14 +91,14 @@ window.PRICE_ITEMS = {
       desc: "원하는 물건이 날아와 캐릭터의 몸에 달라붙습니다.",
       price: "20,000",
       image: "images/price/api-attach.png",
-      options: ["물건 교체", "날아오는 속도 변경", "파티클 제거 / 변경 가능", "PROP 변경 가능", "상호작용 속도 변경 가능"]
+      options: ["파티클 제거 / 변경 O", "PROP 변경 O", "상호작용 속도 변경 O"]
     },
     {
       title: "머리쾅",
       desc: "직접 제작한 소품이 캐릭터의 머리를 강타합니다.",
       price: "20,000",
       image: "images/price/api-head-bonk.png",
-      options: ["물건 교체", "표정 변경", "파티클 제거 / 변경 가능", "PROP 변경 가능", "상호작용 속도 변경 가능"]
+      options: ["표정 변경 O", "파티클 제거 / 변경 O", "PROP 변경 O", "상호작용 속도 변경 O"]
     },
     {
       title: "와르르",
@@ -101,23 +108,23 @@ window.PRICE_ITEMS = {
         "images/price/api-pile-bury.png",
         "images/price/api-pile-pour.png"
       ],
-      options: ["물건 교체", "파티클 제거 / 변경 가능", "PROP 변경 가능", "상호작용 속도 변경 가능"]
+      options: ["파티클 제거 / 변경 O", "PROP 변경 O", "상호작용 속도 변경 O"]
     },
     {
       title: "윙크",
       desc: "캐릭터가 윙크하는 연출입니다.",
       price: "20,000",
       image: "images/price/api-wink.png",
-      options: ["파티클 제거 / 변경 가능"]
+      options: ["파티클 제거 / 변경 O"]
     }
   ],
   "api-custom": [
     {
       title: "API 제작",
-      desc: "API 커스텀은 그냥 원하는 방향으로 연출을 커스텀해 드립니다.",
+      desc: "요청하신 방향으로 연출을 커스텀해 드립니다.",
       price: "50,000~",
       image: "images/price/api-custom.png",
-      options: ["파티클 제거 / 변경 가능", "PROP 변경 가능", "상호작용 속도 변경 가능"]
+      options: ["파티클 제거 / 변경 O", "PROP 변경 O", "상호작용 속도 변경 O"]
     },
     {
       title: "팬 캐릭터 뽀뽀",
@@ -126,15 +133,12 @@ window.PRICE_ITEMS = {
       image: "images/price/api-kiss.png",
       options: [
         { label: "부위 추가", price: "+10,000~", quantity: true },
-        "파티클 제거 / 변경 가능",
-        "PROP 변경 가능",
-        "상호작용 속도 변경 가능"
+        "파티클 제거 / 변경 O",
+        "PROP 변경 O",
+        "상호작용 속도 변경 O"
       ]
     }
   ]
 };
-
-window.PRICE_NOTE =
-  "필요한 옵션만 골라 Discord(@im_rabbi) 또는 트위터 DM으로 문의해 주세요. 견적 확인 후 주문 · 원격 세팅 기본 제공.";
 
 window.PRICE_SLIDER_INTERVAL = 5000;

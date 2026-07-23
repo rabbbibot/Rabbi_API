@@ -29,8 +29,18 @@
     if (previewTitle && page.previewTitle) previewTitle.textContent = page.previewTitle;
 
     if (copyBtn && page.copyLabel) copyBtn.textContent = page.copyLabel;
-    if (sendXBtn && page.sendXLabel) sendXBtn.textContent = page.sendXLabel;
-    if (sendDiscordBtn && page.sendDiscordLabel) sendDiscordBtn.textContent = page.sendDiscordLabel;
+    if (sendXBtn && page.sendXIcon) renderSendButton(sendXBtn, page.sendLabel, page.sendXIcon, page.sendXAriaLabel);
+    if (sendDiscordBtn && page.sendDiscordIcon) {
+      renderSendButton(sendDiscordBtn, page.sendLabel, page.sendDiscordIcon, page.sendDiscordAriaLabel);
+    }
+  }
+
+  function renderSendButton(btn, label, iconHtml, ariaLabel) {
+    if (!btn) return;
+    btn.classList.add("order-action-btn--with-icon");
+    btn.setAttribute("aria-label", ariaLabel || label);
+    btn.innerHTML =
+      '<span class="order-action-btn__text">' + (label || "보내기") + "</span>" + iconHtml;
   }
 
   initOrderPageText();
@@ -101,8 +111,24 @@
     );
   }
 
-  function formatOrderOptionLabel(label) {
-    return String(label).replace(/ 가능$/, "");
+  function ensureOptionO(text) {
+    var value = String(text || "").trim();
+    if (!value || value.endsWith(" O")) return value;
+    if (/\+/.test(value)) return value;
+    return value + " O";
+  }
+
+  function formatOrderPrice(price) {
+    if (!price || price === "문의") return price || "문의";
+    var text = String(price);
+    if (text.includes("~")) return text.replace(/~$/, "") + "원~";
+    return text + "원";
+  }
+
+  function formatOrderOptionLabel(option) {
+    if (typeof option === "string") return option;
+    if (!option || !option.label) return "";
+    return option.label + (option.price ? " " + option.price : "");
   }
 
   function isOrderOption(option) {
@@ -111,12 +137,11 @@
 
   function normalizeOption(option) {
     if (typeof option === "string") {
-      return { type: "checkbox", label: formatOrderOptionLabel(option) };
+      return { type: "checkbox", label: ensureOptionO(option) };
     }
-    var label = option.label + (option.price ? " " + option.price : "");
     return {
       type: option.quantity ? "quantity" : "checkbox",
-      label: formatOrderOptionLabel(label),
+      label: ensureOptionO(formatOrderOptionLabel(option)),
       unitAmount: parseAmount(option.price || option.label)
     };
   }
@@ -183,8 +208,11 @@
           '<label class="order-api-head">' +
             '<input type="checkbox" class="order-api-toggle" name="api" value="' + apiId + '" ' +
               'data-category="' + categoryKey + '" data-index="' + index + '">' +
-            '<span class="order-api-name">' + escapeHtml(item.title) + "</span>" +
-            '<span class="order-api-price">' + escapeHtml(item.price || "문의") + "</span>" +
+            '<span class="order-api-info">' +
+              '<span class="order-api-name">' + escapeHtml(item.title) + "</span>" +
+              (item.desc ? '<span class="order-api-desc">' + escapeHtml(item.desc) + "</span>" : "") +
+            "</span>" +
+            '<span class="order-api-price">' + escapeHtml(formatOrderPrice(item.price)) + "</span>" +
           "</label>" +
           optionsHtml +
         "</div>"
@@ -211,10 +239,15 @@
         createField("Warudo 버전", createRadioGroup("warudo", cfg.warudoVersions)) +
         createField(
           "방송 플랫폼",
-          '<div class="order-choice-group order-choice-group--wrap">' +
-            cfg.platforms.map(function (platform) {
-              return createCheckbox("platform", platform.id, platform.label);
-            }).join("") +
+          '<div class="order-platform-field">' +
+            '<div class="order-choice-group order-choice-group--wrap">' +
+              cfg.platforms.map(function (platform) {
+                return createCheckbox("platform", platform.id, platform.label);
+              }).join("") +
+            "</div>" +
+            '<input class="order-input order-platform-other" type="text" name="platform-other" placeholder="' +
+              escapeHtml(cfg.platformOtherPlaceholder || "없음 · 기타 플랫폼 직접 입력") +
+            '">' +
           "</div>"
         ) +
         createField("세팅 방식", createRadioGroup("setup", cfg.setupMethods)) +
@@ -230,6 +263,14 @@
           '<textarea class="order-textarea" name="note" rows="4" placeholder="원하시는 연출, 일정, 참고 자료 등"></textarea>'
         ) +
       "</section>";
+  }
+
+  function getPlatformLabels() {
+    var platforms = getCheckedLabels("platform");
+    var otherInput = form.elements["platform-other"];
+    var other = otherInput ? otherInput.value.trim() : "";
+    if (other) platforms.push(other);
+    return platforms;
   }
 
   function getCheckedLabels(name) {
@@ -312,7 +353,7 @@
     var note = form.elements.note ? form.elements.note.value.trim() : "";
     var warudo = getRadioLabel("warudo");
     var setup = getRadioLabel("setup");
-    var platforms = getCheckedLabels("platform");
+    var platforms = getPlatformLabels();
     var isPrivate = form.querySelector('input[name="private"]:checked');
     var selectedApis = getSelectedApis();
     var total = calculateEstimate(selectedApis, !!isPrivate);
@@ -329,7 +370,7 @@
       lines.push("- (미선택)");
     } else {
       selectedApis.forEach(function (entry) {
-        lines.push("- " + entry.item.title + " (" + entry.item.price + ")");
+        lines.push("- " + entry.item.title + " (" + formatOrderPrice(entry.item.price) + ")");
         if (entry.item.desc) {
           lines.push("  " + entry.item.desc);
         }
@@ -400,19 +441,20 @@
     if (done) done();
   }
 
-  function flashButton(btn, message, originalText) {
+  function flashButton(btn, message, restore) {
     btn.textContent = message;
     setTimeout(function () {
-      btn.textContent = originalText;
+      if (typeof restore === "function") restore();
+      else btn.textContent = restore;
     }, 1800);
   }
 
-  function bindSendButton(btn, url, doneMessage, defaultLabel) {
+  function bindSendButton(btn, url, doneMessage, restore) {
     if (!btn) return;
     btn.addEventListener("click", function () {
       copyOrderText(function () {
         window.open(url, "_blank", "noopener,noreferrer");
-        flashButton(btn, doneMessage, defaultLabel);
+        flashButton(btn, doneMessage, restore);
       });
     });
   }
@@ -448,13 +490,27 @@
       sendXBtn,
       ORDER_CONFIG.contacts.twitter.send || ORDER_CONFIG.contacts.twitter.href,
       "복사 후 X 열림",
-      ORDER_PAGE.sendXLabel || "보내기 (X)"
+      function () {
+        renderSendButton(
+          sendXBtn,
+          ORDER_PAGE.sendLabel,
+          ORDER_PAGE.sendXIcon,
+          ORDER_PAGE.sendXAriaLabel
+        );
+      }
     );
     bindSendButton(
       sendDiscordBtn,
       ORDER_CONFIG.contacts.discord.send || ORDER_CONFIG.contacts.discord.href,
       "복사 후 Discord 열림",
-      ORDER_PAGE.sendDiscordLabel || "보내기 (Discord)"
+      function () {
+        renderSendButton(
+          sendDiscordBtn,
+          ORDER_PAGE.sendLabel,
+          ORDER_PAGE.sendDiscordIcon,
+          ORDER_PAGE.sendDiscordAriaLabel
+        );
+      }
     );
   }
 
