@@ -34,6 +34,7 @@ html {
   --main-border: rgba(0, 0, 0, 0.1);
   --main-card-bg: #f5f5f5;
   --main-accent-soft: rgba(0, 0, 0, 0.06);
+  --snb-mobile-bar-height: 3.25rem;
 }
 
 *, *::before, *::after {
@@ -994,31 +995,78 @@ html:has(.notice-list) {
 @media (max-width: 768px) {
   .layout {
     flex-direction: column;
+    min-height: 100vh;
   }
 
   .snb {
-    position: relative;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
     width: 100%;
+    height: auto;
+    overflow: visible;
     border-right: none;
     border-bottom: 1px solid var(--border-subtle);
-    padding: 1rem 0;
+    padding: 0;
+    z-index: 200;
+  }
+
+  .snb-gnb {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    min-height: var(--snb-mobile-bar-height);
+    overflow: hidden;
+  }
+
+  .snb nav.snb-primary-nav {
+    order: 1;
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow-x: auto;
+    overflow-y: visible;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .snb nav.snb-primary-nav::-webkit-scrollbar {
+    display: none;
+  }
+
+  .snb-profile {
+    order: 2;
+    flex: 0 0 auto;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0 0.85rem;
+    margin: 0;
+    border-bottom: none;
+    border-right: none;
+    border-left: 1px solid var(--border-subtle);
+    flex-shrink: 0;
+    background: var(--surface);
+    z-index: 2;
+  }
+
+  .snb-profile-img {
+    width: 1.75rem;
+    height: 1.75rem;
+    margin-bottom: 0;
+  }
+
+  .snb-profile-name {
+    font-size: 0.88rem;
+    font-weight: 600;
   }
 
   .main {
     margin-left: 0;
-    padding: 1.5rem 1.25rem 3rem;
-  }
-
-  .snb-profile {
-    flex-direction: row;
-    gap: 0.85rem;
-    padding-bottom: 1rem;
-  }
-
-  .snb-profile-img {
-    width: 52px;
-    height: 52px;
-    margin-bottom: 0;
+    width: 100%;
+    min-height: calc(100vh - var(--snb-mobile-bar-height));
+    padding: 1.25rem 1rem 3rem;
+    margin-top: var(--snb-mobile-bar-height);
   }
 }
 
@@ -1777,6 +1825,7 @@ body.prop-lightbox-open {
   border-radius: 10px;
   background: #fff;
   color: var(--main-text);
+  font-family: inherit;
   font-size: 0.9rem;
   line-height: 1.65;
 }
@@ -2068,6 +2117,7 @@ body.prop-lightbox-open {
   border-radius: 10px;
   background: #fafafa;
   color: var(--main-text);
+  font-family: inherit;
   font-size: 0.84rem;
   line-height: 1.65;
   resize: vertical;

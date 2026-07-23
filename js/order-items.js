@@ -20,8 +20,8 @@ window.ORDER_CONFIG = {
   ],
   platformOtherPlaceholder: "없음 · 기타 플랫폼 직접 입력",
   warudoVersions: [
-    { id: "pro", label: "Warudo PRO" },
-    { id: "standard", label: "Warudo 일반", default: true }
+    { id: "standard", label: "와루도 일반", default: true },
+    { id: "pro", label: "Warudo PRO" }
   ],
   setupMethods: [
     { id: "remote", label: "원격 세팅 (초보자)" },

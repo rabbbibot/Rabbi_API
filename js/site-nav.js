@@ -83,12 +83,14 @@ window.renderSiteNav = function () {
       .join("");
   }
 
-  var html = '<div class="snb-profile">';
+  var html = '<div class="snb-gnb">';
+  html += '<div class="snb-profile">';
   html += '<div class="snb-profile-img" aria-hidden="true"></div>';
   if (site.name) {
     html += '<span class="snb-profile-name">' + site.name + "</span>";
   }
-  html += "</div><nav>";
+  html += "</div>";
+  html += '<nav id="snb-primary-nav" class="snb-primary-nav">';
 
   nav.forEach(function (item) {
     if (item.children) {
@@ -121,7 +123,7 @@ window.renderSiteNav = function () {
     }
   });
 
-  aside.innerHTML = html + "</nav>";
+  aside.innerHTML = html + "</nav></div>";
   aside.dataset.navActive = current;
 };
 
@@ -130,7 +132,7 @@ window.updateSiteNavActive = function () {
   var nav = window.NAV || [];
   if (!aside) return;
 
-  if (!aside.querySelector("nav")) {
+  if (!aside.querySelector(".snb-primary-nav")) {
     window.renderSiteNav();
     return;
   }
@@ -144,11 +146,11 @@ window.updateSiteNavActive = function () {
     return item.children.some(treeContainsCurrent);
   }
 
-  aside.querySelectorAll(":scope > nav > a[data-nav-id]").forEach(function (link) {
+  aside.querySelectorAll(".snb-primary-nav > a[data-nav-id]").forEach(function (link) {
     link.classList.toggle("active", link.dataset.navId === current);
   });
 
-  aside.querySelectorAll(":scope > nav > .snb-dropdown[data-nav-id]").forEach(function (dropdown) {
+  aside.querySelectorAll(".snb-primary-nav > .snb-dropdown[data-nav-id]").forEach(function (dropdown) {
     var item = window.findNavItemById(nav, dropdown.dataset.navId);
     if (!item) return;
 

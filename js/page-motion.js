@@ -250,6 +250,7 @@ function navigateSoft(href, options) {
   if (window.syncSiteNavPage) {
     window.syncSiteNavPage(pageIdFromPath(nextUrl.pathname));
   }
+  if (window.closeMobileSiteNav) window.closeMobileSiteNav();
 
   var fadeOut = options.skipFadeOut ? Promise.resolve() : fadeOutMain(main);
 
@@ -296,6 +297,14 @@ document.addEventListener(
 
     var anchor = event.target.closest("a[href]");
     if (!isInternalPageLink(anchor)) return;
+
+    if (
+      window.matchMedia("(max-width: 768px)").matches &&
+      anchor.classList.contains("snb-dropdown-trigger") &&
+      anchor.closest(".snb-primary-nav > .snb-dropdown")
+    ) {
+      return;
+    }
 
     event.preventDefault();
     if (anchor.blur) anchor.blur();
