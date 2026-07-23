@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="MUMMU">
+  <rect width="64" height="64" fill="#262626"/>
+  <path d="M17 27c-4 5-4 12 0 17" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round"/>
+  <path d="M47 27c4 5 4 12 0 17" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round"/>
+  <circle cx="26" cy="34" r="2.5" fill="#fff"/>
+  <circle cx="38" cy="34" r="2.5" fill="#fff"/>
+  <path d="M25 42c2.5 5 11.5 5 14 0" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
+</svg>

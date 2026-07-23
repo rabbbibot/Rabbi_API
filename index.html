@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="theme-color" content="#ffffff">
+  <style>
+    @font-face {
+      font-family: 'Pretendard';
+      font-weight: 45 920;
+      font-style: normal;
+      font-display: block;
+      src: url('fonts/PretendardVariable.woff2') format('woff2-variations');
+    }
+    html, body {
+      background: #fff;
+      font-family: 'Pretendard', sans-serif;
+    }
+    .main { background: #fff; min-height: 100vh; }
+  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="icon.webp" type="image/webp">
+  <link rel="preload" href="fonts/PretendardVariable.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="icon.webp" as="image">
+  <title>Rabbi API</title>
+  <link rel="stylesheet" href="css/mummu-layout.css">
+  <link rel="stylesheet" href="css/commission-menu.css">
+  <link rel="stylesheet" href="css/page-motion.css">
+</head>
+<body>
+  <div class="layout">
+    <aside class="snb" data-page="intro"></aside>
+    <main class="main">
+      <header class="page-header">
+        <h1 class="page-title">소개</h1>
+      </header>
+      <section class="content-block">
+        <div class="intro-profile">
+          <div class="intro-profile-img">
+            <img src="icon.webp" alt="Rabbi" width="140" height="140" decoding="sync">
+          </div>
+          <div class="intro-profile-info">
+            <p class="intro-name">Rabbi</p>
+            <p class="intro-text">Warudo API · 팬 캐릭터 제작</p>
+          </div>
+        </div>
+        <p class="intro-desc">Warudo API 연동 및 팬 캐릭터 제작 작업물을 정리하는 페이지입니다.</p>
+        <ul class="notice-list" id="intro-links"></ul>
+      </section>
+    </main>
+  </div>
+  <script src="js/site-config.js"></script>
+  <script src="js/site-nav.js"></script>
+  <script>
+    (function () {
+      var list = document.getElementById("intro-links");
+      if (!list || !window.SITE) return;
+      list.innerHTML = (window.SITE.links || []).map(function (link) {
+        var hasLink = link.href && link.href !== "#" && link.href !== "mailto:";
+        if (hasLink) {
+          return (
+            '<li class="notice-card">' +
+              '<a href="' + link.href + '" class="notice-link"' +
+                (link.external ? ' target="_blank" rel="noopener noreferrer"' : "") + ">" +
+                "<strong>" + link.label + "</strong>" +
+                '<span class="notice-link-desc">' + link.desc + "</span>" +
+              "</a>" +
+            "</li>"
+          );
+        }
+        return (
+          '<li class="notice-card">' +
+            '<span class="notice-link">' +
+              "<strong>" + link.label + "</strong>" +
+              '<span class="notice-link-desc">' + link.desc + "</span>" +
+            "</span>" +
+          "</li>"
+        );
+      }).join("");
+    })();
+  </script>
+  <script src="js/commission-menu.js"></script>
+  <script src="js/page-motion.js"></script>
+</body>
+</html>

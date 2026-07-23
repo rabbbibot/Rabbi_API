@@ -1,0 +1,116 @@
+/* 사이드바 · 드롭다운 공통 */
+
+.snb nav {
+  width: 100%;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+}
+
+.snb nav > a,
+.snb-dropdown-trigger {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  border-left: 2px solid transparent;
+  padding: 0.6rem 1.25rem;
+  padding-left: calc(1.25rem - 2px);
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 0.95rem;
+  line-height: 1.35;
+  transition: color 0.2s, background 0.2s;
+}
+
+.snb nav > a:hover,
+.snb-dropdown-trigger:hover {
+  color: var(--text);
+  background: var(--hover-bg);
+}
+
+html[data-theme="light"] .snb nav > a:hover,
+html[data-theme="light"] .snb-dropdown-trigger:hover {
+  background: var(--hover-bg, rgba(0, 0, 0, 0.04));
+}
+
+.snb nav > a.active,
+.snb-dropdown-trigger.active {
+  color: var(--text);
+  border-left-color: var(--text-muted);
+}
+
+.snb-dropdown {
+  width: 100%;
+  overflow: visible;
+}
+
+.snb-dropdown-menu {
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 0.25s ease;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.snb-dropdown:hover .snb-dropdown-menu {
+  max-height: 0 !important;
+}
+
+.snb-dropdown.open .snb-dropdown-menu {
+  max-height: 360px !important;
+}
+
+.snb-dropdown.open .snb-dropdown-trigger {
+  color: var(--text);
+  background: var(--hover-bg);
+}
+
+.snb-dropdown-trigger {
+  cursor: pointer;
+  user-select: none;
+}
+
+.snb-dropdown-menu a {
+  display: block;
+  box-sizing: border-box;
+  padding: 0.45rem 1.25rem 0.45rem 2rem;
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 0.9rem;
+  line-height: 1.35;
+  border-left: 2px solid transparent;
+  transition: color 0.2s, background 0.2s;
+}
+
+.snb-dropdown-menu a:hover,
+.snb-dropdown-menu a.active {
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.04);
+  border-left-color: var(--text-muted);
+}
+
+html[data-theme="light"] .snb-dropdown-menu a:hover,
+html[data-theme="light"] .snb-dropdown-menu a.active {
+  background: var(--hover-bg, rgba(0, 0, 0, 0.04));
+}
+
+@media (max-width: 768px) {
+  .snb nav {
+    display: block !important;
+    width: 100%;
+  }
+
+  .snb nav > a,
+  .snb-dropdown-trigger {
+    width: 100%;
+    border-left: 2px solid transparent !important;
+    border-bottom: none !important;
+    padding: 0.5rem 1.25rem !important;
+    padding-left: calc(1.25rem - 2px) !important;
+  }
+
+  .snb nav > a.active,
+  .snb-dropdown-trigger.active {
+    border-left-color: var(--text-muted) !important;
+  }
+}
