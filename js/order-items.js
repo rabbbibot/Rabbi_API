@@ -5,8 +5,13 @@ window.ORDER_CONFIG = {
   privateFee: 20000,
   privateLabel: "비공개 (+20,000원)",
   contacts: {
-    discord: { label: "Discord (@im_rabbi)", href: "index.html" },
-    twitter: { label: "트위터 DM", href: "https://x.com/laebi545779", external: true }
+    discord: {
+      label: "Discord (@im_rabbi)",
+      href: "https://discord.gg/T5TjUyMx",
+      send: "https://discord.gg/T5TjUyMx",
+      external: true
+    },
+    twitter: { label: "트위터 DM", href: "https://x.com/laebi545779", external: true, send: "https://x.com/messages" }
   },
   platforms: [
     { id: "soop", label: "SOOP(숲)" },

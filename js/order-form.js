@@ -3,6 +3,8 @@
   var preview = document.getElementById("order-preview");
   var estimate = document.getElementById("order-estimate");
   var copyBtn = document.getElementById("order-copy");
+  var sendXBtn = document.getElementById("order-send-x");
+  var sendDiscordBtn = document.getElementById("order-send-discord");
   if (!form || !window.ORDER_CONFIG || !window.PRICE_ITEMS) return;
 
   function parseAmount(text) {
@@ -61,6 +63,10 @@
     return String(label).replace(/ 가능$/, "");
   }
 
+  function isOrderOption(option) {
+    return !(typeof option === "object" && option.order === false);
+  }
+
   function normalizeOption(option) {
     if (typeof option === "string") {
       return { type: "checkbox", label: formatOrderOptionLabel(option) };
@@ -100,6 +106,7 @@
           var checkboxOptions = [];
 
           options.forEach(function (option, optIndex) {
+            if (!isOrderOption(option)) return;
             var normalized = normalizeOption(option);
             if (normalized.type === "quantity") {
               quantityOptions.push(createQuantityOption(apiId, optIndex, option));
@@ -208,6 +215,7 @@
       var options = [];
 
       (item.options || []).forEach(function (option, optIndex) {
+        if (!isOrderOption(option)) return;
         var normalized = normalizeOption(option);
         if (normalized.type === "quantity") {
           var qtyInput = form.querySelector('[name="option-qty-' + apiId + "-" + optIndex + '"]');
@@ -330,6 +338,39 @@
     preview.value = buildPreviewText();
   }
 
+  function copyOrderText(done) {
+    var text = preview.value;
+    if (!text) return;
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(function () {
+        if (done) done();
+      });
+      return;
+    }
+
+    preview.select();
+    document.execCommand("copy");
+    if (done) done();
+  }
+
+  function flashButton(btn, message, originalText) {
+    btn.textContent = message;
+    setTimeout(function () {
+      btn.textContent = originalText;
+    }, 1800);
+  }
+
+  function bindSendButton(btn, url, doneMessage, defaultLabel) {
+    if (!btn) return;
+    btn.addEventListener("click", function () {
+      copyOrderText(function () {
+        window.open(url, "_blank", "noopener,noreferrer");
+        flashButton(btn, doneMessage, defaultLabel);
+      });
+    });
+  }
+
   function bindEvents() {
     form.addEventListener("change", updateFormState);
     form.addEventListener("input", updateFormState);
@@ -352,26 +393,23 @@
     });
 
     copyBtn.addEventListener("click", function () {
-      var text = preview.value;
-      if (!text) return;
-
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(text).then(function () {
-          copyBtn.textContent = "복사됨!";
-          setTimeout(function () {
-            copyBtn.textContent = "클립보드에 복사";
-          }, 1800);
-        });
-        return;
-      }
-
-      preview.select();
-      document.execCommand("copy");
-      copyBtn.textContent = "복사됨!";
-      setTimeout(function () {
-        copyBtn.textContent = "클립보드에 복사";
-      }, 1800);
+      copyOrderText(function () {
+        flashButton(copyBtn, "복사됨!", "클립보드에 복사");
+      });
     });
+
+    bindSendButton(
+      sendXBtn,
+      ORDER_CONFIG.contacts.twitter.send || ORDER_CONFIG.contacts.twitter.href,
+      "복사 후 X 열림",
+      "보내기 (X)"
+    );
+    bindSendButton(
+      sendDiscordBtn,
+      ORDER_CONFIG.contacts.discord.send || ORDER_CONFIG.contacts.discord.href,
+      "복사 후 Discord 열림",
+      "보내기 (Discord)"
+    );
   }
 
   buildForm();

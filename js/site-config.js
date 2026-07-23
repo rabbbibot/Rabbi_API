@@ -2,15 +2,15 @@ window.SITE = {
   name: "Rabbi",
   title: "Rabbi API",
   tagline: "Warudo API · 팬 캐릭터 제작",
-  icon: "icon.webp",
   links: [
     {
       label: "Discord",
       desc: "@im_rabbi",
-      href: "#"
+      href: "https://discord.gg/T5TjUyMx",
+      external: true
     },
     {
-      label: "X (Twitter)",
+      label: "Rabbi",
       desc: "x.com/laebi545779",
       href: "https://x.com/laebi545779",
       external: true

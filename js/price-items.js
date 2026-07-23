@@ -75,7 +75,13 @@ window.PRICE_ITEMS = {
       desc: "자리를 비우면 캐릭터가 잠드는 모션을 취합니다.",
       price: "20,000~",
       image: "images/price/api-auto-sleep.png",
-      options: ["Zzz 효과", "잠드는 속도 변경", "파티클 제거 / 변경 가능", "PROP 제거 / 변경 가능", "상호작용 속도 변경 가능"]
+      options: [
+        { label: "Zzz 효과", order: false },
+        "잠드는 속도 변경",
+        "파티클 제거 / 변경 가능",
+        "PROP 제거 / 변경 가능",
+        "상호작용 속도 변경 가능"
+      ]
     },
     {
       title: "붙이기",

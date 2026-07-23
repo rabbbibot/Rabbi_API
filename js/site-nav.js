@@ -42,11 +42,7 @@
       .join("");
   }
 
-  var html = '<div class="snb-profile"><div class="snb-profile-img">';
-  if (site.icon) {
-    html += '<img src="' + site.icon + '" alt="' + (site.name || "") + '" width="72" height="72" decoding="sync">';
-  }
-  html += "</div></div><nav>";
+  var html = "<nav>";
 
   nav.forEach(function (item) {
     if (item.children) {
