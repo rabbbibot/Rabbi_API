@@ -1,1 +1,26 @@
-/* 페이지 전환 애니메이션 없음 — 일반 이동 */
+@media (prefers-reduced-motion: no-preference) {
+  html.page-motion-pending:not(.page-motion-booted) .main .page-header,
+  html.page-motion-pending:not(.page-motion-booted) .main .content-block {
+    opacity: 0;
+  }
+
+  .main.page-main-leaving {
+    opacity: 0;
+    transition: opacity 220ms ease;
+    pointer-events: none;
+  }
+
+  .page-reveal-item {
+    opacity: 0;
+    transform: translate3d(0, 28px, 0);
+    transition:
+      opacity 1.05s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 1.05s cubic-bezier(0.22, 1, 0.36, 1);
+    transition-delay: calc(var(--reveal-index, 0) * 110ms);
+  }
+
+  .main.page-reveal-active .page-reveal-item {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
