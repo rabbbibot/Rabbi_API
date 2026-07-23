@@ -924,21 +924,13 @@ html:has(.notice-list) {
 
 .price-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: 1fr;
   gap: 1rem;
   width: 100%;
 }
 
 .price-grid:has(.price-card:only-child) {
   grid-template-columns: 1fr;
-}
-
-.price-page .price-grid:has(.price-card:only-child) {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-
-.price-page .price-grid:has(.price-card:only-child) .price-card {
-  max-width: 100%;
 }
 
 /* Price GIF slider */
@@ -1099,11 +1091,19 @@ html:has(.notice-list) {
   flex-direction: column;
   align-items: stretch;
   gap: 1.25rem;
-  max-width: 720px;
+  max-width: 1000px;
   width: 100%;
   margin-left: auto;
   margin-right: auto;
   padding-bottom: 2rem;
+  container-type: inline-size;
+  container-name: price-page;
+}
+
+@container price-page (min-width: 720px) {
+  .price-grid:not(:has(.price-card:only-child)) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 .price-intro {
@@ -1314,10 +1314,6 @@ html:has(.notice-list) {
 }
 
 @media (max-width: 768px) {
-  .price-grid {
-    grid-template-columns: 1fr;
-  }
-
   .price-intro {
     flex-direction: column;
     gap: 0.9rem;

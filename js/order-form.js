@@ -7,14 +7,56 @@
   var sendDiscordBtn = document.getElementById("order-send-discord");
   if (!form || !window.ORDER_CONFIG || !window.PRICE_ITEMS) return;
 
+  function initOrderPageText() {
+    var page = window.ORDER_PAGE;
+    if (!page) return;
+
+    if (page.docTitle) document.title = page.docTitle;
+
+    var heading = document.querySelector(".page-header .page-title");
+    if (heading && page.heading) heading.textContent = page.heading;
+
+    var desc = document.querySelector(".page-header .page-desc");
+    if (desc && page.descHtml) desc.innerHTML = page.descHtml;
+
+    var estimateTitle = document.querySelector(".order-summary .order-summary-title");
+    if (estimateTitle && page.estimateTitle) estimateTitle.textContent = page.estimateTitle;
+
+    var estimateNote = document.querySelector(".order-summary-note");
+    if (estimateNote && page.estimateNote) estimateNote.textContent = page.estimateNote;
+
+    var previewTitle = document.querySelector(".order-output .order-summary-title");
+    if (previewTitle && page.previewTitle) previewTitle.textContent = page.previewTitle;
+
+    if (copyBtn && page.copyLabel) copyBtn.textContent = page.copyLabel;
+    if (sendXBtn && page.sendXLabel) sendXBtn.textContent = page.sendXLabel;
+    if (sendDiscordBtn && page.sendDiscordLabel) sendDiscordBtn.textContent = page.sendDiscordLabel;
+  }
+
+  initOrderPageText();
+
   function parseAmount(text) {
     if (!text) return 0;
     var match = String(text).match(/([\d,]+)/);
     return match ? parseInt(match[1].replace(/,/g, ""), 10) : 0;
   }
 
-  function formatWon(amount) {
-    return amount.toLocaleString("ko-KR") + "원~";
+  function formatWon(amount, variable) {
+    return amount.toLocaleString("ko-KR") + (variable ? "원~" : "원");
+  }
+
+  function isVariablePrice(price) {
+    return String(price || "").includes("~");
+  }
+
+  function hasVariableEstimate(selectedApis) {
+    return selectedApis.some(function (entry) {
+      if (entry.category === "api-custom") return true;
+      if (isVariablePrice(entry.item && entry.item.price)) return true;
+      return entry.options.some(function (option) {
+        return (option.amount || 0) > 0;
+      });
+    });
   }
 
   function escapeHtml(text) {
@@ -261,7 +303,7 @@
 
   function formatSelectedOption(option) {
     if (option.qty > 1) {
-      return option.label + " × " + option.qty + " (+" + formatWon(option.amount).replace("~", "") + "~)";
+      return option.label + " × " + option.qty + " (+" + formatWon(option.amount, true).replace("~", "") + "~)";
     }
     return option.label;
   }
@@ -288,6 +330,9 @@
     } else {
       selectedApis.forEach(function (entry) {
         lines.push("- " + entry.item.title + " (" + entry.item.price + ")");
+        if (entry.item.desc) {
+          lines.push("  " + entry.item.desc);
+        }
         if (entry.options.length) {
           entry.options.forEach(function (option) {
             lines.push("  · " + formatSelectedOption(option));
@@ -297,7 +342,7 @@
     }
 
     lines.push("");
-    lines.push("■ 예상 견적: " + formatWon(total));
+    lines.push("■ 예상 견적: " + formatWon(total, hasVariableEstimate(selectedApis)));
 
     if (note) {
       lines.push("");
@@ -333,8 +378,9 @@
     var selectedApis = getSelectedApis();
     var isPrivate = !!form.querySelector('input[name="private"]:checked');
     var total = calculateEstimate(selectedApis, isPrivate);
+    var variableEstimate = hasVariableEstimate(selectedApis);
 
-    estimate.textContent = formatWon(total);
+    estimate.textContent = formatWon(total, variableEstimate);
     preview.value = buildPreviewText();
   }
 
@@ -394,7 +440,7 @@
 
     copyBtn.addEventListener("click", function () {
       copyOrderText(function () {
-        flashButton(copyBtn, "복사됨!", "클립보드에 복사");
+        flashButton(copyBtn, "복사됨!", ORDER_PAGE.copyLabel || "클립보드에 복사");
       });
     });
 
@@ -402,13 +448,13 @@
       sendXBtn,
       ORDER_CONFIG.contacts.twitter.send || ORDER_CONFIG.contacts.twitter.href,
       "복사 후 X 열림",
-      "보내기 (X)"
+      ORDER_PAGE.sendXLabel || "보내기 (X)"
     );
     bindSendButton(
       sendDiscordBtn,
       ORDER_CONFIG.contacts.discord.send || ORDER_CONFIG.contacts.discord.href,
       "복사 후 Discord 열림",
-      "보내기 (Discord)"
+      ORDER_PAGE.sendDiscordLabel || "보내기 (Discord)"
     );
   }
 

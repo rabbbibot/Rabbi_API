@@ -16,7 +16,7 @@
   </style>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="preload" href="fonts/PretendardVariable.woff2" as="font" type="font/woff2" crossorigin>
-  <title>Rabbi API · 주문서 작성</title>
+  <title>Rabbi API</title>
   <link rel="stylesheet" href="css/mummu-layout.css">
   <link rel="stylesheet" href="css/commission-menu.css">
   <link rel="stylesheet" href="css/page-motion.css">
@@ -26,23 +26,23 @@
     <aside class="snb" data-page="order"></aside>
     <main class="main">
       <header class="page-header">
-        <h1 class="page-title">주문서 작성</h1>
-        <p class="page-desc">항목을 선택한 뒤 <strong>클립보드에 복사</strong> 버튼을 누르시고, 내용을 <a class="page-desc-link" href="https://discord.gg/T5TjUyMx" target="_blank" rel="noopener noreferrer">Discord (@im_rabbi)</a> 또는 <a class="page-desc-link" href="https://x.com/laebi545779" target="_blank" rel="noopener noreferrer">트위터 DM</a>으로 보내주세요.</p>
+        <h1 class="page-title"></h1>
+        <p class="page-desc"></p>
       </header>
       <section class="content-block wide order-page">
         <form class="order-form" id="order-form" novalidate></form>
         <div class="order-summary">
-          <h2 class="order-summary-title">예상 견적</h2>
-          <p class="order-summary-price" id="order-estimate">0원~</p>
-          <p class="order-summary-note">API 난이도에 따라 실제 결제 금액이 달라질 수 있습니다.</p>
+          <h2 class="order-summary-title"></h2>
+          <p class="order-summary-price" id="order-estimate">0</p>
+          <p class="order-summary-note"></p>
         </div>
         <div class="order-output">
-          <h2 class="order-summary-title">주문 내용</h2>
+          <h2 class="order-summary-title"></h2>
           <textarea class="order-preview" id="order-preview" rows="12" readonly></textarea>
           <div class="order-actions">
-            <button type="button" class="order-action-btn order-action-btn--primary" id="order-copy">클립보드에 복사</button>
-            <button type="button" class="order-action-btn" id="order-send-x">보내기 (X)</button>
-            <button type="button" class="order-action-btn" id="order-send-discord">보내기 (Discord)</button>
+            <button type="button" class="order-action-btn order-action-btn--primary" id="order-copy"></button>
+            <button type="button" class="order-action-btn" id="order-send-x"></button>
+            <button type="button" class="order-action-btn" id="order-send-discord"></button>
           </div>
         </div>
       </section>
