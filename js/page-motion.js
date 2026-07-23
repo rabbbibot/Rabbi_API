@@ -240,14 +240,16 @@ function navigateSoft(href, options) {
   }
 
   var main = document.querySelector(".main");
-  var aside = document.querySelector(".snb[data-page]");
   if (!main) {
     window.location.href = nextUrl.href;
     return Promise.resolve();
   }
 
   isNavigating = true;
-  document.body.classList.add("is-navigating");
+
+  if (window.syncSiteNavPage) {
+    window.syncSiteNavPage(pageIdFromPath(nextUrl.pathname));
+  }
 
   var fadeOut = options.skipFadeOut ? Promise.resolve() : fadeOutMain(main);
 
@@ -262,16 +264,7 @@ function navigateSoft(href, options) {
     .then(function (html) {
       var doc = new DOMParser().parseFromString(html, "text/html");
       var newMain = doc.querySelector(".main");
-      var newAside = doc.querySelector(".snb[data-page]");
       if (!newMain) throw new Error("missing main");
-
-      if (aside && newAside) {
-        aside.classList.add("snb-swapping");
-        aside.dataset.page = newAside.dataset.page || pageIdFromPath(nextUrl.pathname);
-        requestAnimationFrame(function () {
-          aside.classList.remove("snb-swapping");
-        });
-      }
 
       main.className = newMain.className;
       main.innerHTML = newMain.innerHTML;
@@ -292,7 +285,6 @@ function navigateSoft(href, options) {
     })
     .finally(function () {
       isNavigating = false;
-      document.body.classList.remove("is-navigating");
     });
 }
 

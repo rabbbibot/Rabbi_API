@@ -1,1 +1,1 @@
-/* Dropdown open/active state is driven by .snb[data-page] CSS in site-nav.js */
+/* SPA shell: sidebar stays mounted; page-motion.js handles navigation. */

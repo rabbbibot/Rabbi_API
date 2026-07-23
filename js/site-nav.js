@@ -1,91 +1,13 @@
-window.buildSiteNavStateCss = function (nav) {
-  var rules = [];
-
-  function addActiveLink(pageId) {
-    rules.push(
-      '.snb[data-page="' +
-        pageId +
-        '"] a[data-nav-id="' +
-        pageId +
-        '"]{' +
-        "color:var(--text)!important;" +
-        "border-left-color:var(--text-muted)!important;" +
-        "background:var(--hover-bg)!important;" +
-        "}"
-    );
+window.findNavItemById = function (items, id) {
+  for (var i = 0; i < items.length; i++) {
+    var item = items[i];
+    if (item.id === id) return item;
+    if (item.children) {
+      var found = window.findNavItemById(item.children, id);
+      if (found) return found;
+    }
   }
-
-  function addOpenDropdown(pageId, dropdownId) {
-    rules.push(
-      '.snb[data-page="' +
-        pageId +
-        '"] .snb-dropdown[data-nav-id="' +
-        dropdownId +
-        '"] .snb-dropdown-menu{display:block!important}',
-      '.snb[data-page="' +
-        pageId +
-        '"] .snb-dropdown[data-nav-id="' +
-        dropdownId +
-        '"] > .snb-dropdown-trigger{' +
-        "color:var(--text)!important;" +
-        "background:var(--hover-bg)!important;" +
-        "border-left-color:var(--text-muted)!important;" +
-        "}"
-    );
-  }
-
-  function addOpenSubmenu(pageId, submenuId) {
-    rules.push(
-      '.snb[data-page="' +
-        pageId +
-        '"] .snb-submenu[data-nav-id="' +
-        submenuId +
-        '"] .snb-submenu-children{display:block!important}',
-      '.snb[data-page="' +
-        pageId +
-        '"] .snb-submenu[data-nav-id="' +
-        submenuId +
-        '"] > .snb-submenu-label{' +
-        "color:var(--text)!important;" +
-        "background:var(--hover-bg)!important;" +
-        "border-left-color:var(--text-muted)!important;" +
-        "}"
-    );
-  }
-
-  function walk(items, ancestors) {
-    items.forEach(function (item) {
-      if (item.href) {
-        addActiveLink(item.id);
-        ancestors.forEach(function (ancestorId) {
-          addOpenDropdown(item.id, ancestorId);
-          addOpenSubmenu(item.id, ancestorId);
-        });
-      }
-      if (item.children) {
-        walk(item.children, ancestors.concat(item.id));
-      }
-    });
-  }
-
-  walk(nav, []);
-  return rules.join("\n");
-};
-
-window.ensureSiteNavStyles = function () {
-  var nav = window.NAV || [];
-  var style = document.getElementById("snb-nav-state");
-  var css = window.buildSiteNavStateCss(nav);
-
-  if (style) {
-    if (style.textContent !== css) style.textContent = css;
-    return;
-  }
-
-  style = document.createElement("style");
-  style.id = "snb-nav-state";
-  style.textContent = css;
-  document.head.appendChild(style);
+  return null;
 };
 
 window.renderSiteNav = function () {
@@ -94,7 +16,13 @@ window.renderSiteNav = function () {
   var aside = document.querySelector(".snb[data-page]");
   if (!aside) return;
 
-  window.ensureSiteNavStyles();
+  var current = aside.dataset.page || "";
+
+  function treeContainsCurrent(item) {
+    if (item.id === current) return true;
+    if (!item.children) return false;
+    return item.children.some(treeContainsCurrent);
+  }
 
   function getFirstHref(item) {
     if (item.href) return item.href;
@@ -112,7 +40,9 @@ window.renderSiteNav = function () {
       item.href +
       '" data-nav-id="' +
       item.id +
-      '" style="padding-left:' +
+      '"' +
+      (item.id === current ? ' class="active"' : "") +
+      ' style="padding-left:' +
       paddingLeft +
       'rem">' +
       item.label +
@@ -125,12 +55,17 @@ window.renderSiteNav = function () {
     return children
       .map(function (child) {
         if (child.children) {
+          var open = treeContainsCurrent(child);
           var firstHref = getFirstHref(child);
           return (
-            '<div class="snb-submenu" data-nav-id="' +
+            '<div class="snb-submenu' +
+            (open ? " open" : "") +
+            '" data-nav-id="' +
             child.id +
             '">' +
-            '<a class="snb-submenu-label" href="' +
+            '<a class="snb-submenu-label' +
+            (open ? " active" : "") +
+            '" href="' +
             firstHref +
             '" data-nav-id="' +
             child.id +
@@ -157,10 +92,13 @@ window.renderSiteNav = function () {
 
   nav.forEach(function (item) {
     if (item.children) {
+      var open = treeContainsCurrent(item);
       var firstHref = getFirstHref(item);
-      html += '<div class="snb-dropdown" data-nav-id="' + item.id + '">';
+      html += '<div class="snb-dropdown' + (open ? " open" : "") + '" data-nav-id="' + item.id + '">';
       html +=
-        '<a class="snb-dropdown-trigger" href="' +
+        '<a class="snb-dropdown-trigger' +
+        (open ? " active" : "") +
+        '" href="' +
         firstHref +
         '" data-nav-id="' +
         item.id +
@@ -170,35 +108,86 @@ window.renderSiteNav = function () {
       html += '<div class="snb-dropdown-menu">' + renderMenuChildren(item.children, 0) + "</div>";
       html += "</div>";
     } else {
-      html += '<a href="' + item.href + '" data-nav-id="' + item.id + '">' + item.label + "</a>";
+      html +=
+        '<a href="' +
+        item.href +
+        '" data-nav-id="' +
+        item.id +
+        '"' +
+        (item.id === current ? ' class="active"' : "") +
+        ">" +
+        item.label +
+        "</a>";
     }
   });
 
   aside.innerHTML = html + "</nav>";
-};
-
-window.findNavItemById = function (items, id) {
-  for (var i = 0; i < items.length; i++) {
-    var item = items[i];
-    if (item.id === id) return item;
-    if (item.children) {
-      var found = window.findNavItemById(item.children, id);
-      if (found) return found;
-    }
-  }
-  return null;
+  aside.dataset.navActive = current;
 };
 
 window.updateSiteNavActive = function () {
   var aside = document.querySelector(".snb[data-page]");
+  var nav = window.NAV || [];
   if (!aside) return;
+
   if (!aside.querySelector("nav")) {
     window.renderSiteNav();
+    return;
   }
+
+  var current = aside.dataset.page || "";
+  if (aside.dataset.navActive === current) return;
+
+  function treeContainsCurrent(item) {
+    if (item.id === current) return true;
+    if (!item.children) return false;
+    return item.children.some(treeContainsCurrent);
+  }
+
+  aside.querySelectorAll(":scope > nav > a[data-nav-id]").forEach(function (link) {
+    link.classList.toggle("active", link.dataset.navId === current);
+  });
+
+  aside.querySelectorAll(":scope > nav > .snb-dropdown[data-nav-id]").forEach(function (dropdown) {
+    var item = window.findNavItemById(nav, dropdown.dataset.navId);
+    if (!item) return;
+
+    var contains = treeContainsCurrent(item);
+    dropdown.classList.toggle("open", contains);
+
+    var trigger = dropdown.querySelector(":scope > .snb-dropdown-trigger");
+    if (trigger) trigger.classList.toggle("active", contains);
+
+    dropdown.querySelectorAll(".snb-submenu[data-nav-id]").forEach(function (submenu) {
+      var subItem = window.findNavItemById(nav, submenu.dataset.navId);
+      if (!subItem) return;
+
+      var subContains = treeContainsCurrent(subItem);
+      submenu.classList.toggle("open", subContains);
+
+      var label = submenu.querySelector(":scope > .snb-submenu-label");
+      if (label) label.classList.toggle("active", subContains);
+    });
+
+    dropdown.querySelectorAll(".snb-dropdown-menu a[data-nav-id]").forEach(function (link) {
+      if (link.classList.contains("snb-submenu-label")) return;
+      link.classList.toggle("active", link.dataset.navId === current);
+    });
+  });
+
+  aside.dataset.navActive = current;
+};
+
+window.syncSiteNavPage = function (pageId) {
+  var aside = document.querySelector(".snb[data-page]");
+  if (!aside || !pageId) return;
+  aside.dataset.page = pageId;
+  window.updateSiteNavActive();
 };
 
 window.initSiteNav = function () {
-  window.ensureSiteNavStyles();
+  var legacyStyle = document.getElementById("snb-nav-state");
+  if (legacyStyle) legacyStyle.remove();
   window.updateSiteNavActive();
 };
 

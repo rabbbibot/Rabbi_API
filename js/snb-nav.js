@@ -12,6 +12,10 @@
     dd.classList.add("open");
   }
 
+  dropdowns.forEach(function (dd) {
+    dd.classList.remove("open");
+  });
+
   var activeSub = document.querySelector(".snb-dropdown-menu a.active");
   if (activeSub) {
     var parent = activeSub.closest(".snb-dropdown");
