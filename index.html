@@ -23,6 +23,7 @@
   <link rel="stylesheet" href="css/mummu-layout.css">
   <link rel="stylesheet" href="css/commission-menu.css">
   <link rel="stylesheet" href="css/page-motion.css">
+  <script src="js/page-motion-init.js"></script>
 </head>
 <body>
   <div class="layout">
@@ -33,6 +34,7 @@
       </header>
       <section class="content-block">
         <div class="intro-profile">
+          <div class="intro-profile-img" aria-hidden="true"></div>
           <div class="intro-profile-info">
             <p class="intro-name">Rabbi</p>
             <p class="intro-text">Warudo API · 팬 캐릭터 제작</p>
@@ -48,6 +50,21 @@
     (function () {
       var list = document.getElementById("intro-links");
       if (!list || !window.SITE) return;
+
+      function renderLinkIcon(link) {
+        var iconKey = link.icon;
+        var iconClass = "notice-link-icon" + (iconKey ? " notice-link-icon--" + iconKey : "");
+        if (link.iconImage) {
+          return (
+            '<span class="' + iconClass + ' notice-link-icon--image" aria-hidden="true">' +
+              '<img class="notice-link-icon-img" src="' + link.iconImage + '" alt="" loading="lazy" decoding="async">' +
+            "</span>"
+          );
+        }
+        var iconHtml = iconKey && window.SITE_ICONS ? SITE_ICONS[iconKey] : "";
+        return '<span class="' + iconClass + '" aria-hidden="true">' + (iconHtml || "") + "</span>";
+      }
+
       list.innerHTML = (window.SITE.links || []).map(function (link) {
         var hasLink = link.href && link.href !== "#" && link.href !== "mailto:";
         if (hasLink) {
@@ -55,8 +72,11 @@
             '<li class="notice-card">' +
               '<a href="' + link.href + '" class="notice-link"' +
                 (link.external ? ' target="_blank" rel="noopener noreferrer"' : "") + ">" +
-                "<strong>" + link.label + "</strong>" +
-                '<span class="notice-link-desc">' + link.desc + "</span>" +
+                renderLinkIcon(link) +
+                '<span class="notice-link-body">' +
+                  "<strong>" + link.label + "</strong>" +
+                  '<span class="notice-link-desc">' + link.desc + "</span>" +
+                "</span>" +
               "</a>" +
             "</li>"
           );
@@ -64,8 +84,11 @@
         return (
           '<li class="notice-card">' +
             '<span class="notice-link">' +
-              "<strong>" + link.label + "</strong>" +
-              '<span class="notice-link-desc">' + link.desc + "</span>" +
+              renderLinkIcon(link) +
+              '<span class="notice-link-body">' +
+                "<strong>" + link.label + "</strong>" +
+                '<span class="notice-link-desc">' + link.desc + "</span>" +
+              "</span>" +
             "</span>" +
           "</li>"
         );
