@@ -21,7 +21,7 @@ window.ORDER_CONFIG = {
   platformOtherPlaceholder: "없음 · 기타 플랫폼 직접 입력",
   warudoVersions: [
     { id: "pro", label: "Warudo PRO" },
-    { id: "standard", label: "Warudo 일반" }
+    { id: "standard", label: "Warudo 일반", default: true }
   ],
   setupMethods: [
     { id: "remote", label: "원격 세팅 (초보자)" },
@@ -30,20 +30,26 @@ window.ORDER_CONFIG = {
   categories: [
     { key: "api-basic", label: "기본 API" },
     { key: "api-custom", label: "커스텀 API" }
-  ]
+  ],
+  propPurchase: {
+    title: "소품 (PROP)",
+    unitPrice: 5000,
+    unitLabel: "자체제작 PROP 구매 (API 구매시 무료 제공)"
+  }
 };
 
 window.ORDER_PAGE = {
   docTitle: "Rabbi API · 주문서 작성",
   heading: "주문서 작성",
   descHtml:
-    '항목을 선택한 뒤 <strong>클립보드에 복사</strong> 버튼을 누르시고, 내용을 ' +
+    '항목을 선택한 뒤 <strong>주문서 복사</strong> 버튼을 누르시고, 내용을 ' +
     '<a class="page-desc-link" href="https://discord.gg/T5TjUyMx" target="_blank" rel="noopener noreferrer">Discord (@im_rabbi)</a> 또는 ' +
     '<a class="page-desc-link" href="https://x.com/laebi545779" target="_blank" rel="noopener noreferrer">트위터 DM</a>으로 보내 주세요.',
   estimateTitle: "예상 견적",
-  estimateNote: "기본 API는 고정 가격입니다. 커스텀 API·부위 추가·비공개 옵션은 금액이 달라질 수 있습니다.",
+  estimateNote: "기본 API는 고정 가격입니다. 커스텀 API·비공개 옵션은 금액이 달라질 수 있습니다.",
   previewTitle: "주문 내용",
-  copyLabel: "클립보드에 복사",
+  copyLabel: "주문서 복사",
+  copyDoneLabel: "복사 완료!",
   sendLabel: "보내기",
   sendXAriaLabel: "X로 보내기",
   sendDiscordAriaLabel: "Discord로 보내기",

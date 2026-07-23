@@ -1,18 +1,12 @@
 function createPortfolioCard(item) {
-  const option = item.option
-    ? `<p class="portfolio-option">${item.option}</p>`
-    : "";
-
-  return `
-    <article class="portfolio-card">
-      ${createYoutubeVideo(item.youtubeId)}
-      <div class="portfolio-meta">
-        <p><span>VTUBER:</span> ${item.vtuber ?? ""}</p>
-        <p><span>ART:</span> ${item.art ?? ""}</p>
-        ${option}
-      </div>
-    </article>
-  `;
+  return (
+    '<article class="portfolio-card">' +
+      createYoutubeVideo(item.youtubeId) +
+      '<div class="portfolio-meta">' +
+        '<p class="portfolio-desc">' + (item.desc || "임시 텍스트") + "</p>" +
+      "</div>" +
+    "</article>"
+  );
 }
 
 function initPortfolioList() {

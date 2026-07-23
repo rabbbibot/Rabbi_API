@@ -4,7 +4,7 @@ window.TIP_ITEMS = {
       title: "블루프린트란?",
       html: `
         <p>블루프린트는 Warudo에서 <strong>「어떤 일이 일어나면, 무엇을 할지」</strong>를 정하는 연출 설정입니다.</p>
-        <p>예를 들어 키를 누르면 표정이 바뀌거나, API 호출 시 소품이 날아오는 동작 등을 블루프린트로 만들 수 있습니다. 제가 전달해 드린 설정 파일도 블루프린트 형태로 불러와서 사용합니다.</p>
+        <p>예를 들어 키를 누르면 표정이 바뀌거나, API 호출 시 소품이 날아오는 동작 등을 블루프린트로 만들 수 있습니다.<br>제가 전달해 드린 설정 파일도 블루프린트 형태로 불러와서 사용합니다.</p>
       `
     },
     {
@@ -17,18 +17,16 @@ window.TIP_ITEMS = {
           <li>전달받은 <strong>.json</strong> 블루프린트 파일을 선택합니다.</li>
           <li>목록에 블루프린트 이름이 추가되면 불러오기가 완료된 것입니다.</li>
         </ol>
-        <p class="notice-inline-note">같은 방법으로 여러 블루프린트 파일을 계속 추가할 수 있습니다.</p>
       `
     },
     {
       title: "블루프린트 불러오기 (클립보드)",
       html: `
         <ol>
-          <li>블루프린트 코드(JSON)를 복사합니다.</li>
+          <li>메모장에서 블루프린트 코드(JSON)를 복사합니다.</li>
           <li>블루프린트 탭 상단에서 <strong>Import Blueprint From Clipboard</strong>를 클릭합니다.</li>
           <li>클립보드 내용이 블루프린트로 등록됩니다.</li>
         </ol>
-        <p class="notice-inline-note">Discord 등으로 코드만 받은 경우 이 방법을 사용하면 됩니다.</p>
       `
     },
     {
@@ -40,7 +38,6 @@ window.TIP_ITEMS = {
           <li>노드 에디터에서 단축키, API 조건, 연결된 소품 등 설정값을 확인·수정합니다.</li>
           <li>씬으로 돌아가 단축키나 API 동작을 테스트해 정상 작동하는지 확인합니다.</li>
         </ol>
-        <p>블루프린트는 씬마다 따로 저장됩니다. 다른 씬에서도 쓰려면 같은 파일을 다시 불러오거나, <strong>Export Blueprint To File</strong>로 내보낸 뒤 복사해서 사용하세요.</p>
       `
     }
   ],
@@ -52,11 +49,11 @@ window.TIP_ITEMS = {
         <div class="tip-platform-grid">
           <section class="tip-platform-card tip-platform-card--soop">
             <h4 class="tip-platform-title">SOOP(숲)</h4>
-            <a class="tip-platform-link" href="https://steamcommunity.com/workshop/browse/?appid=2079120&searchtext=SOOP" target="_blank" rel="noopener noreferrer">창작마당</a>
+            <a class="tip-platform-link" href="https://steamcommunity.com/workshop/browse/?appid=2079120&searchtext=SOOP" target="_blank" rel="noopener noreferrer">적용하기</a>
           </section>
           <section class="tip-platform-card tip-platform-card--chzzk">
             <h4 class="tip-platform-title">치지직</h4>
-            <a class="tip-platform-link" href="https://steamcommunity.com/workshop/browse/?appid=2079120&searchtext=Chzzk" target="_blank" rel="noopener noreferrer">창작마당</a>
+            <a class="tip-platform-link" href="https://steamcommunity.com/workshop/browse/?appid=2079120&searchtext=Chzzk" target="_blank" rel="noopener noreferrer">적용하기</a>
           </section>
         </div>
       `

@@ -5,10 +5,13 @@
 
     root.innerHTML =
       '<div class="price-intro-copy">' +
-        "<p>" + intro.lead + "</p>" +
-        "<p>" + intro.note + "</p>" +
+        (Array.isArray(intro.lead)
+          ? intro.lead.map(function (line) {
+              return "<p>" + line + "</p>";
+            }).join("")
+          : "<p>" + intro.lead + "</p>") +
       "</div>" +
-      '<p class="price-intro-price">' + intro.price + "</p>";
+      (intro.price ? '<p class="price-intro-price">' + intro.price + "</p>" : "");
   }
 
   function initPricePageTitle() {

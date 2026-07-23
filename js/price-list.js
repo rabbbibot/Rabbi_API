@@ -1,7 +1,19 @@
 function getPriceImages(item) {
+  if (item.variants && item.variants.length) {
+    return item.variants.map(function (variant) {
+      return variant.image;
+    });
+  }
   if (item.images && item.images.length) return item.images;
   if (item.image) return [item.image];
   return [];
+}
+
+function getPriceVariants(item) {
+  if (item.variants && item.variants.length) return item.variants;
+  return getPriceImages(item).map(function (src) {
+    return { image: src, label: "", desc: item.desc || "" };
+  });
 }
 
 function createPriceMedia(item) {
@@ -10,6 +22,7 @@ function createPriceMedia(item) {
   }
 
   var images = getPriceImages(item);
+  var variants = getPriceVariants(item);
   if (!images.length) return "";
 
   if (images.length === 1) {
@@ -24,22 +37,26 @@ function createPriceMedia(item) {
 
   return (
     '<div class="price-card-media">' +
-      '<div class="price-card-slider" tabindex="0">' +
+      '<div class="price-card-slider" tabindex="0"' +
+      (item.variants && item.variants.length > 1 ? ' data-has-variants="true"' : "") +
+      ">" +
         '<button type="button" class="price-card-slider-btn price-card-slider-prev" aria-label="이전 이미지">' +
           '<span aria-hidden="true">‹</span>' +
         "</button>" +
         '<div class="price-card-slider-viewport">' +
           '<div class="price-card-slider-track">' +
-            images
-              .map(function (src, index) {
+            variants
+              .map(function (variant, index) {
                 return (
-                  '<figure class="price-card-slider-slide">' +
+                  '<figure class="price-card-slider-slide"' +
+                    ' data-variant-label="' + (variant.label || "") + '"' +
+                    ' data-variant-desc="' + (variant.desc || item.desc || "") + '">' +
                     '<img src="' +
-                    src +
+                    variant.image +
                     '" alt="' +
                     (item.title || "") +
                     " " +
-                    (index + 1) +
+                    (variant.label || index + 1) +
                     '" loading="lazy" decoding="async">' +
                   "</figure>"
                 );
@@ -99,6 +116,10 @@ function createPriceOptions(item) {
 }
 
 function createPriceCard(item) {
+  var variants = getPriceVariants(item);
+  var hasVariants = item.variants && item.variants.length > 1;
+  var initialVariant = hasVariants ? variants[0] : null;
+
   return (
     '<article class="price-card">' +
       createPriceMedia(item) +
@@ -111,7 +132,14 @@ function createPriceCard(item) {
           (item.price || "문의") +
           "</span>" +
         "</div>" +
-        (item.desc ? '<p class="price-card-desc">' + item.desc + "</p>" : "") +
+        (hasVariants
+          ? (initialVariant.label
+              ? '<p class="price-card-variant-label">' + initialVariant.label + "</p>"
+              : "") +
+            '<p class="price-card-desc price-card-desc--variant">' + (initialVariant.desc || item.desc || "") + "</p>"
+          : item.desc
+            ? '<p class="price-card-desc">' + item.desc + "</p>"
+            : "") +
         createPriceOptions(item) +
       "</div>" +
     "</article>"
@@ -125,6 +153,13 @@ function initPriceCardSlider(root) {
   var nextBtn = root.querySelector(".price-card-slider-next");
   var slideCount = track ? track.children.length : 0;
   var current = 0;
+  var autoplayMs = window.PRICE_SLIDER_INTERVAL || 5000;
+  var autoplayId = null;
+  var paused = false;
+  var hasVariants = root.dataset.hasVariants === "true";
+  var card = root.closest(".price-card");
+  var variantLabel = card ? card.querySelector(".price-card-variant-label") : null;
+  var variantDesc = card ? card.querySelector(".price-card-desc--variant") : null;
 
   if (!track || slideCount < 2) {
     if (prevBtn) prevBtn.hidden = true;
@@ -134,32 +169,93 @@ function initPriceCardSlider(root) {
     return;
   }
 
+  function updateVariantCopy(index) {
+    if (!hasVariants || !track) return;
+    var slide = track.children[index];
+    if (!slide) return;
+    if (variantLabel) {
+      var label = slide.dataset.variantLabel || "";
+      variantLabel.textContent = label;
+      variantLabel.hidden = !label;
+    }
+    if (variantDesc) variantDesc.textContent = slide.dataset.variantDesc || "";
+  }
+
   function goTo(index) {
     current = (index + slideCount) % slideCount;
     track.style.transform = "translateX(-" + current * 100 + "%)";
     dots.forEach(function (dot, i) {
       dot.classList.toggle("active", i === current);
     });
+    updateVariantCopy(current);
+  }
+
+  function stopAutoplay() {
+    if (autoplayId !== null) {
+      clearInterval(autoplayId);
+      autoplayId = null;
+    }
+  }
+
+  function startAutoplay() {
+    stopAutoplay();
+    if (paused) return;
+    autoplayId = setInterval(function () {
+      goTo(current + 1);
+    }, autoplayMs);
+  }
+
+  function pauseAutoplay() {
+    paused = true;
+    stopAutoplay();
+  }
+
+  function resumeAutoplay() {
+    paused = false;
+    startAutoplay();
+  }
+
+  function restartAutoplay() {
+    stopAutoplay();
+    startAutoplay();
   }
 
   prevBtn.addEventListener("click", function () {
     goTo(current - 1);
+    restartAutoplay();
   });
 
   nextBtn.addEventListener("click", function () {
     goTo(current + 1);
+    restartAutoplay();
   });
 
   dots.forEach(function (dot) {
     dot.addEventListener("click", function () {
       goTo(Number(dot.dataset.index));
+      restartAutoplay();
     });
   });
 
   root.addEventListener("keydown", function (event) {
-    if (event.key === "ArrowLeft") goTo(current - 1);
-    if (event.key === "ArrowRight") goTo(current + 1);
+    if (event.key === "ArrowLeft") {
+      goTo(current - 1);
+      restartAutoplay();
+    }
+    if (event.key === "ArrowRight") {
+      goTo(current + 1);
+      restartAutoplay();
+    }
   });
+
+  root.addEventListener("mouseenter", pauseAutoplay);
+  root.addEventListener("mouseleave", resumeAutoplay);
+  root.addEventListener("focusin", pauseAutoplay);
+  root.addEventListener("focusout", function (event) {
+    if (!root.contains(event.relatedTarget)) resumeAutoplay();
+  });
+
+  startAutoplay();
 }
 
 function initPriceList() {
